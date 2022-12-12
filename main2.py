@@ -22,10 +22,10 @@ while True:
     try:
         if biggestPoints.size != 0 and gradePoints.size != 0:
             # DISPLAYING ANSWERS
-            utlis.showAnswers(imgWarpColored,myIndex,grading,ans) # DRAW DETECTED ANSWERS
-            utlis.drawGrid(imgWarpColored) # DRAW GRID
+            utils.showAnswers(imgWarpColored,myIndex,grading,ans) # DRAW DETECTED ANSWERS
+            utils.drawGrid(imgWarpColored) # DRAW GRID
             imgRawDrawings = np.zeros_like(imgWarpColored) # NEW BLANK IMAGE WITH WARP IMAGE SIZE
-            utlis.showAnswers(imgRawDrawings, myIndex, grading, ans) # DRAW ON NEW IMAGE
+            utils.showAnswers(imgRawDrawings, myIndex, grading, ans) # DRAW ON NEW IMAGE
             invMatrix = cv2.getPerspectiveTransform(pts2, pts1) # INVERSE TRANSFORMATION MATRIX
             imgInvWarp = cv2.warpPerspective(imgRawDrawings, invMatrix, (widthImg, heightImg)) # INV IMAGE WARP
 
@@ -52,7 +52,7 @@ while True:
     lables = [["Original","Gray","Edges","Contours"],
               ["Biggest Contour","Threshold","Warpped","Final"]]
 
-    stackedImage = utlis.stackImages(imageArray,0.5,lables)
+    stackedImage = utils.stackImages(imageArray,0.5,lables)
     cv2.imshow("Result",stackedImage)
 
    

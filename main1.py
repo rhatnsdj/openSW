@@ -35,16 +35,16 @@ while True:
         imgBigContour = img.copy() # COPY IMAGE FOR DISPLAY PURPOSES
         contours, hierarchy = cv2.findContours(imgCanny, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_NONE) # FIND ALL CONTOURS
         cv2.drawContours(imgContours, contours, -1, (0, 255, 0), 10) # DRAW ALL DETECTED CONTOURS
-        rectCon = utlis.rectContour(contours) # FILTER FOR RECTANGLE CONTOURS
-        biggestPoints= utlis.getCornerPoints(rectCon[0]) # GET CORNER POINTS OF THE BIGGEST RECTANGLE
-        gradePoints = utlis.getCornerPoints(rectCon[1]) # GET CORNER POINTS OF THE SECOND BIGGEST RECTANGLE
+        rectCon = utils.rectContour(contours) # FILTER FOR RECTANGLE CONTOURS
+        biggestPoints= utils.getCornerPoints(rectCon[0]) # GET CORNER POINTS OF THE BIGGEST RECTANGLE
+        gradePoints = utils.getCornerPoints(rectCon[1]) # GET CORNER POINTS OF THE SECOND BIGGEST RECTANGLE
 
         
 
         if biggestPoints.size != 0 and gradePoints.size != 0:
 
             # BIGGEST RECTANGLE WARPING
-            biggestPoints=utlis.reorder(biggestPoints) # REORDER FOR WARPING
+            biggestPoints=utils.reorder(biggestPoints) # REORDER FOR WARPING
             cv2.drawContours(imgBigContour, biggestPoints, -1, (0, 255, 0), 20) # DRAW THE BIGGEST CONTOUR
             pts1 = np.float32(biggestPoints) # PREPARE POINTS FOR WARP
             pts2 = np.float32([[0, 0],[widthImg, 0], [0, heightImg],[widthImg, heightImg]]) # PREPARE POINTS FOR WARP
@@ -53,7 +53,7 @@ while True:
 
             # SECOND BIGGEST RECTANGLE WARPING
             cv2.drawContours(imgBigContour, gradePoints, -1, (255, 0, 0), 20) # DRAW THE BIGGEST CONTOUR
-            gradePoints = utlis.reorder(gradePoints) # REORDER FOR WARPING
+            gradePoints = utils.reorder(gradePoints) # REORDER FOR WARPING
             ptsG1 = np.float32(gradePoints)  # PREPARE POINTS FOR WARP
             ptsG2 = np.float32([[0, 0], [325, 0], [0, 150], [325, 150]])  # PREPARE POINTS FOR WARP
             matrixG = cv2.getPerspectiveTransform(ptsG1, ptsG2)# GET TRANSFORMATION MATRIX
@@ -63,7 +63,7 @@ while True:
             imgWarpGray = cv2.cvtColor(imgWarpColored,cv2.COLOR_BGR2GRAY) # CONVERT TO GRAYSCALE
             imgThresh = cv2.threshold(imgWarpGray, 170, 255,cv2.THRESH_BINARY_INV )[1] # APPLY THRESHOLD AND INVERSE
 
-            boxes = utlis.splitBoxes(imgThresh) # GET INDIVIDUAL BOXES
+            boxes = utils.splitBoxes(imgThresh) # GET INDIVIDUAL BOXES
             cv2.imshow("Split Test ", boxes[3])
             countR=0
             countC=0

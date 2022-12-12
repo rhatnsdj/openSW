@@ -42,11 +42,8 @@ def stackImages(imgArray,scale,lables=[]):
 def reorder(myPoints):
 
     myPoints = myPoints.reshape((4, 2)) # REMOVE EXTRA BRACKET
-    print(myPoints)
     myPointsNew = np.zeros((4, 1, 2), np.int32) # NEW MATRIX WITH ARRANGED POINTS
     add = myPoints.sum(1)
-    print(add)
-    print(np.argmax(add))
     myPointsNew[0] = myPoints[np.argmin(add)]  #[0,0]
     myPointsNew[3] =myPoints[np.argmax(add)]   #[w,h]
     diff = np.diff(myPoints, axis=1)
@@ -76,7 +73,7 @@ def getCornerPoints(cont):
     return approx
 
 def splitBoxes(img):
-    rows = np.vsplit(img,5)
+    rows = np.vsplit(img,20)
     boxes=[]
     for r in rows:
         cols= np.hsplit(r,5)
@@ -84,7 +81,7 @@ def splitBoxes(img):
             boxes.append(box)
     return boxes
 
-def drawGrid(img,questions=5,choices=5):
+def drawGrid(img,questions=20,choices=5):
     secW = int(img.shape[1]/questions)
     secH = int(img.shape[0]/choices)
     for i in range (0,9):
@@ -97,25 +94,32 @@ def drawGrid(img,questions=5,choices=5):
 
     return img
 
-def showAnswers(img,myIndex,grading,ans,questions=5,choices=5):
-     secW = int(img.shape[1]/questions)
-     secH = int(img.shape[0]/choices)
+def showAnswers(img,myIndex,grading,ans,questions=20,choices=5):
+     secW = int(img.shape[1]/choices)
+     secH = int(img.shape[0]/questions)
 
      for x in range(0,questions):
          myAns= myIndex[x]
          cX = (myAns * secW) + secW // 2
          cY = (x * secH) + secH // 2
+
          if grading[x]==1:
             myColor = (0,255,0)
-            #cv2.rectangle(img,(myAns*secW,x*secH),((myAns*secW)+secW,(x*secH)+secH),myColor,cv2.FILLED)
-            cv2.circle(img,(cX,cY),50,myColor,cv2.FILLED)
+            cv2.circle(img,(cX,cY),15,myColor,cv2.FILLED)
          else:
             myColor = (0,0,255)
-            #cv2.rectangle(img, (myAns * secW, x * secH), ((myAns * secW) + secW, (x * secH) + secH), myColor, cv2.FILLED)
-            cv2.circle(img, (cX, cY), 50, myColor, cv2.FILLED)
+            cv2.circle(img, (cX, cY), 15, myColor, cv2.FILLED)
 
             # CORRECT ANSWER
             myColor = (0, 255, 0)
             correctAns = ans[x]
-            cv2.circle(img,((correctAns * secW)+secW//2, (x * secH)+secH//2),
-            20,myColor,cv2.FILLED)
+            cv2.circle(img,((correctAns * secW)+secW//2, (x * secH)+secH//2), 15,myColor,cv2.FILLED)
+
+def imgBlending(imgFinal, imgInvWarp, width, height):
+    for x in range(0, width):
+        for y in range(0, height):
+            if any(imgInvWarp[x][y]):
+                imgFinal[x][y] = imgInvWarp[x][y]
+            else: 
+                continue
+    return imgFinal
