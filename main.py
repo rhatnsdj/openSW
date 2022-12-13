@@ -1,10 +1,15 @@
 import cv2
 import numpy as np
 import utils
+from OCR_tesseract import OCR_tesseract
 
 #--------------
 # Setting
 #--------------
+
+# Start OCR_tesseract: print test title and name
+OCR_tesseract()
+
 # load image
 path="omr.png"
 
